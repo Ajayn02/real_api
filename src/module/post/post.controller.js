@@ -1,5 +1,7 @@
 const postService = require('./post.service')
 const { sendResponse, sendError } = require('../../common/response-handler')
+const prisma = require('../../config/prisma')
+const savedService = require('../save/save.service')
 
 exports.addPost = async (req, res) => {
     try {
@@ -81,16 +83,21 @@ exports.update = async (req, res) => {
     }
 }
 
-exports.deletePost = async (req,res) => {
+exports.deletePost = async (req, res) => {
     try {
         const { id } = req.params
-        const deletedPost = await postService.deletePost(id)
+        const result = await prisma.$transaction(async (tx) => {
+            const deleteSavedItems = await savedService.removeMany(id, tx);
+            const deletedPost = await postService.deletePost(id, tx);
 
-        if (!deletedPost) {
+            return { deleteSavedItems, deletedPost };
+        });
+
+        if (!result) {
             sendError(res, 404, "Post not found")
             return;
         }
-        sendResponse(res, 200, "Post deleted successfully")
+        sendResponse(res, 200, "Post deleted successfully",result.deletedPost)
     } catch (error) {
         sendError(res, 500, "Failed to delete product", error)
     }

@@ -13,13 +13,15 @@ enum Role {
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
   name     String
-  email    String @unique
+  email    String  @unique
   password String
   role     Role
+  image    String?
 
-  post Post[]
+  post      Post[]
+  savedPost SavedPost[]
 }
 
 model Post {
@@ -37,4 +39,15 @@ model Post {
   isSoldout     Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id])
+
+  savedPost SavedPost[]
+}
+
+model SavedPost {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  postId String @db.ObjectId
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
 }

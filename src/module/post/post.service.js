@@ -51,8 +51,13 @@ exports.updatePost = async (data, id) => {
     }
 }
 
-exports.deletePost = async (id) => {
+exports.deletePost = async (id, tx) => {
     try {
+        if (tx) {
+            return await tx.post.delete({
+                where: { id }
+            })
+        }
         return await prisma.post.delete({
             where: { id }
         })
