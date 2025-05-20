@@ -23,3 +23,7 @@ const PORT = 3000 || process.env.PORT
 server.listen(PORT, () => {
     console.log(`server running at post ${PORT}`);
 })
+
+server.get("/",(req,res)=>{
+    res.send(`<h1>real_api server is live</h1>`)
+})
