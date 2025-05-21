@@ -19,3 +19,4 @@ exports.getUserByEmail = async (email) => {
         throw new Error('Failed to fetch user')
     }
 }
+

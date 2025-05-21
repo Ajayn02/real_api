@@ -46,7 +46,7 @@ exports.signin = async (req, res) => {
         }
 
         const token = jsonwebtoken.sign({ userId: user.id, role: user.role }, process.env.PRIVATE_KEY)
-        sendResponse(res, 200, "Login completed Successfully", {token})
+        sendResponse(res, 200, "Login completed Successfully", { token })
     } catch (error) {
         sendError(res, 500, "user adding failed", error)
     }

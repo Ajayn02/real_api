@@ -51,3 +51,10 @@ model SavedPost {
   user User @relation(fields: [userId], references: [id])
   post Post @relation(fields: [postId], references: [id])
 }
+
+model Report {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  postId String @db.ObjectId
+  issue  String
+}

@@ -1,9 +1,9 @@
 const { Prisma } = require('@prisma/client');
 
-exports.sendResponse = (res, statusCode, success, message, data = null) => {
+exports.sendResponse = (res, statusCode, message, data = null) => {
     return res.status(statusCode).json({
         data,
-        success,
+        success: true,
         message,
     });
 };

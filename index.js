@@ -7,6 +7,7 @@ const authRoutes = require('./src/module/auth/auth.route')
 const postRoutes = require('./src/module/post/post.route')
 const userRoutes = require('./src/module/user/user.route')
 const saveRoutes = require('./src/module/save/save.route')
+const reportRoutes=require('./src/module/report/report.route')
 
 const server = express()
 
@@ -20,6 +21,7 @@ apiRouter.use('/auth', authRoutes)
 apiRouter.use('/posts', postRoutes)
 apiRouter.use('/users', userRoutes)
 apiRouter.use('/save', saveRoutes)
+apiRouter.use('/reports',reportRoutes)
 
 const PORT = 3000 || process.env.PORT
 
