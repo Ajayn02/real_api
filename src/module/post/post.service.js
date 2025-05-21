@@ -20,8 +20,13 @@ exports.getAllPosts = async () => {
     }
 }
 
-exports.getPostById = async (id) => {
+exports.getPostById = async (id, tx) => {
     try {
+        if (tx) {
+            return await tx.post.findUnique({
+                where: { id }
+            })
+        }
         return await prisma.post.findUnique({
             where: { id }
         })
@@ -63,6 +68,16 @@ exports.deletePost = async (id, tx) => {
         })
     } catch (error) {
         throw new Error("Failed to delete post")
+    }
+}
+
+exports.getAllImages = async () => {
+    try {
+        return await prisma.post.findMany({
+            select: { image: true }
+        })
+    } catch (error) {
+        throw new Error("Failed to update post")
     }
 }
 

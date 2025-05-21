@@ -1,4 +1,7 @@
 const reportService = require('./report.service')
+const postService = require('../post/post.service')
+const userService = require('../user/user.service')
+const prisma = require('../../config/prisma')
 const { sendError, sendResponse } = require('../../common/response-handler')
 
 
@@ -16,5 +19,59 @@ exports.addReport = async (req, res) => {
         sendResponse(res, 201, "Report added successfully", newReport)
     } catch (error) {
         sendError(res, 500, "Failed to add report", error)
+    }
+}
+
+exports.getAllReports = async (req, res) => {
+    try {
+        const reports = await reportService.getAllReports()
+        if (!reports) {
+            sendError(res, 400, "Reports not found")
+            return;
+        }
+
+        sendResponse(res, 200, "Reports retrived successfully", reports)
+    } catch (error) {
+        sendError(res, 500, "Failed to retrive reports", error)
+    }
+}
+
+exports.getById = async (req, res) => {
+    try {
+        const { id } = req.params
+        if (!id) {
+            sendError(res, 400, "ID is required")
+            return;
+        }
+        const result = await prisma.$transaction(async (tx) => {
+            const report = await reportService.getReportById(id, tx)
+            const post = await postService.getPostById(report.postId, tx)
+            const user = await userService.getUserById(post.userId, tx)
+
+            return { report, post, user }
+        })
+        sendResponse(res, 200, "Report retrived successfully", {
+            report: result.report, post: result.post, user: {
+                id: result.user.id, name: result.user.name, email: result.user.email, role: result.user.role, image: result.user.image
+            }
+        })
+    } catch (error) {
+        sendError(res, 500, "Failed to retrive report", error)
+    }
+}
+
+exports.removeReport = async (req, res) => {
+    try {
+        const { id } = req.params
+        const deletedReport = await reportService.deleteReport(id)
+        if (!deletedReport) {
+            sendError(res, 404, "Report not found")
+            return;
+        }
+        sendResponse(res, 200, "Report deleted successfully", deletedReport)
+    } catch (error) {
+        console.log(error);
+        
+        sendError(res, 500, "Failed to delete report", error)
     }
 }

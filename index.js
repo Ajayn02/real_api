@@ -7,12 +7,17 @@ const authRoutes = require('./src/module/auth/auth.route')
 const postRoutes = require('./src/module/post/post.route')
 const userRoutes = require('./src/module/user/user.route')
 const saveRoutes = require('./src/module/save/save.route')
-const reportRoutes=require('./src/module/report/report.route')
+const reportRoutes = require('./src/module/report/report.route')
+// const adminRoutes = require('./src/module/admin/admin.route')
+
+const postService = require('./src/module/post/post.service')
+const clearUnwantedFiles = require('./src/common/cleanup-uploads')
 
 const server = express()
 
 server.use(cors())
 server.use(express.json())
+server.use('/uploads', express.static('./uploads'))
 
 const apiRouter = express.Router()
 server.use("/api", apiRouter)
@@ -21,11 +26,15 @@ apiRouter.use('/auth', authRoutes)
 apiRouter.use('/posts', postRoutes)
 apiRouter.use('/users', userRoutes)
 apiRouter.use('/save', saveRoutes)
-apiRouter.use('/reports',reportRoutes)
+apiRouter.use('/reports', reportRoutes)
+// apiRouter.use('/admin', adminRoutes)
 
 const PORT = 3000 || process.env.PORT
 
-server.listen(PORT, () => {
+server.listen(PORT, async () => {
+    const allImages = await postService.getAllImages()
+    const allowedFiles = allImages.map((item) => item.image);
+    clearUnwantedFiles(allowedFiles);
     console.log(`server running at post ${PORT}`);
 })
 
