@@ -49,8 +49,9 @@ exports.getById = async (req, res) => {
 
 exports.getByUserId = async (req, res) => {
     try {
-        const { id } = req.params
-        const posts = await postService.getPostsByUSerId(id)
+        const userId = req.user.userId
+        
+        const posts = await postService.getPostsByUSerId(userId)
         if (!posts) {
             sendError(res, 404, "Posts not found",)
             return;
@@ -97,7 +98,7 @@ exports.deletePost = async (req, res) => {
             sendError(res, 404, "Post not found")
             return;
         }
-        sendResponse(res, 200, "Post deleted successfully",result.deletedPost)
+        sendResponse(res, 200, "Post deleted successfully", result.deletedPost)
     } catch (error) {
         sendError(res, 500, "Failed to delete product", error)
     }

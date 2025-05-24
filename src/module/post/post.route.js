@@ -3,6 +3,8 @@ const postController = require('./post.controller')
 const { jwtMiddleware, allowRoles, uploadSingle } = require('../../common/middleware')
 
 const router = express.Router()
+router.route('/user')
+    .get(jwtMiddleware, allowRoles('user', 'admin'), postController.getByUserId)
 
 router.route('/')
     .post(jwtMiddleware, allowRoles('user'), uploadSingle('image'), postController.addPost)
@@ -13,8 +15,6 @@ router.route('/:id')
     .put(jwtMiddleware, allowRoles('user'), uploadSingle('image'), postController.update)
     .delete(jwtMiddleware, allowRoles('user', 'admin'), postController.deletePost)
 
-router.route('/user/:id')
-    .get(jwtMiddleware, allowRoles('user', 'admin'), postController.getByUserId)
 
 
 module.exports = router
