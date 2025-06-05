@@ -1,7 +1,16 @@
 const userService = require('./user.service')
 const { sendResponse, sendError } = require('../../common/response-handler')
 
+exports.getUniqueUser = async (req, res) => {
+    const userId = req.user.userId
+    const user = await userService.getUserById(userId)
 
+    if (!user) {
+        sendError(res, 404, 'user not found')
+        return;
+    }
+    sendResponse(res, 200, "user data retrived", { name: user.name, email: user.email, id: user.id, image: user.image, role: user.role })
+}
 
 exports.updateUser = async (req, res) => {
     try {

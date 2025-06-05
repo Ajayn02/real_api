@@ -4,6 +4,9 @@ const { jwtMiddleware, allowRoles, uploadSingle } = require('../../common/middle
 
 const router = express.Router()
 
+router.route('/user')
+    .get(jwtMiddleware,allowRoles('user'),userController.getUniqueUser)
+
 router.route("/")
     .put(jwtMiddleware, allowRoles('user'), uploadSingle('image'), userController.updateUser)
     .get(jwtMiddleware, allowRoles('admin'), userController.getAllUsers)

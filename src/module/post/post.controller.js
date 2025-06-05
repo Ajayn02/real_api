@@ -50,7 +50,7 @@ exports.getById = async (req, res) => {
 exports.getByUserId = async (req, res) => {
     try {
         const userId = req.user.userId
-        
+
         const posts = await postService.getPostsByUSerId(userId)
         if (!posts) {
             sendError(res, 404, "Posts not found",)
