@@ -32,7 +32,7 @@ model Post {
   price         Int
   area          String
   apartmentType String
-  specialities  String
+  description   String
   landmark      String
   googlemap     String
   image         String

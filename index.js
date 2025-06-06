@@ -11,6 +11,7 @@ const reportRoutes = require('./src/module/report/report.route')
 // const adminRoutes = require('./src/module/admin/admin.route')
 
 const postService = require('./src/module/post/post.service')
+const userService = require('./src/module/user/user.service')
 const clearUnwantedFiles = require('./src/common/cleanup-uploads')
 
 const server = express()
@@ -32,8 +33,11 @@ apiRouter.use('/reports', reportRoutes)
 const PORT = 3000 || process.env.PORT
 
 server.listen(PORT, async () => {
-    const allImages = await postService.getAllImages()
-    const allowedFiles = allImages.map((item) => item.image);
+    const allPosts = await postService.getAllImages()
+    const allUsers = await userService.getAllUsers()
+    const allPostImages = allPosts.map((item) => item.image);
+    const allUserImages = allUsers.map((item) => item.image)
+    const allowedFiles = [...allPostImages, ...allUserImages];
     clearUnwantedFiles(allowedFiles);
     console.log(`server running at post ${PORT}`);
 })

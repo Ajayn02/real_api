@@ -1,19 +1,25 @@
 const prisma = require('../../config/prisma')
 
-exports.addPost = async ({ userId, title, location, price, area, apartmentType, specialities, landmark, googlemap, image }) => {
+exports.addPost = async ({ userId, title, location, price, area, apartmentType, description, landmark, googlemap, image }) => {
     try {
         return await prisma.post.create({
-            data: { userId, title, location, price, area, apartmentType, specialities, landmark, googlemap, image }
+            data: { userId, title, location, price, area, apartmentType, description, landmark, googlemap, image }
         })
     } catch (error) {
         throw new Error("Failed to add post")
     }
 }
 
-exports.getAllPosts = async () => {
+exports.getAllPosts = async (search) => {
     try {
         return await prisma.post.findMany({
-            where: { isSoldout: false }
+            where: {
+                isSoldout: false,
+                location: {
+                    contains: search,
+                    mode: 'insensitive',
+                }
+            }
         })
     } catch (error) {
         throw new Error("Failed to fetch posts")
