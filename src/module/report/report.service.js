@@ -42,3 +42,16 @@ exports.deleteReport = async (id) => {
         throw new Error(error)
     }
 }
+
+exports.getReportsByuserIdAndPostId = async (postId, userId) => {
+    try {
+        return await prisma.report.findFirst({
+            where: {
+                postId,
+                userId
+            }
+        })
+    } catch (error) {
+        throw new Error(error)
+    }
+}

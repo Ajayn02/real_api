@@ -15,6 +15,19 @@ exports.addReport = async (req, res) => {
             return;
         }
 
+        const post = await postService.getPostById(postId)
+
+        if (post?.userId == userId) {
+            sendError(res, 400, "You can't report your own post")
+            return;
+        }
+
+        const existing = await reportService.getReportsByuserIdAndPostId(postId, userId)
+        if (existing) {
+            sendError(res, 400, "Your report against this post already exists")
+            return;
+        }
+
         const newReport = await reportService.addReport(userId, postId, issue)
         sendResponse(res, 201, "Report added successfully", newReport)
     } catch (error) {
@@ -47,7 +60,6 @@ exports.getById = async (req, res) => {
             const report = await reportService.getReportById(id, tx)
             const post = await postService.getPostById(report.postId, tx)
             const user = await userService.getUserById(post.userId, tx)
-
             return { report, post, user }
         })
         sendResponse(res, 200, "Report retrived successfully", {
@@ -71,7 +83,7 @@ exports.removeReport = async (req, res) => {
         sendResponse(res, 200, "Report deleted successfully", deletedReport)
     } catch (error) {
         console.log(error);
-        
+
         sendError(res, 500, "Failed to delete report", error)
     }
 }
