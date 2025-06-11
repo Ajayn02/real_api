@@ -37,17 +37,34 @@ exports.addReport = async (req, res) => {
 
 exports.getAllReports = async (req, res) => {
     try {
-        const reports = await reportService.getAllReports()
+        const reports = await reportService.getAllReports();
         if (!reports) {
-            sendError(res, 400, "Reports not found")
+            sendError(res, 400, "Reports not found");
             return;
         }
 
-        sendResponse(res, 200, "Reports retrived successfully", reports)
+        const allReportDetails = await Promise.all(
+            reports.map(async (item) => {
+                const post = await postService.getPostById(item.postId);
+                if (!post) return null;
+
+                // Merge post with report metadata
+                return {
+                    ...post,
+                    reportId: item.id,
+                    reporterId: item.userId,
+                };
+            })
+        );
+
+        const filteredReports = allReportDetails.filter(Boolean);
+
+        sendResponse(res, 200, "Reports retrieved successfully", { reports: filteredReports });
     } catch (error) {
-        sendError(res, 500, "Failed to retrive reports", error)
+        sendError(res, 500, "Failed to retrieve reports", error);
     }
-}
+};
+
 
 exports.getById = async (req, res) => {
     try {

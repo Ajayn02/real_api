@@ -53,8 +53,9 @@ model SavedPost {
 }
 
 model Report {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  postId String @db.ObjectId
+  id     String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId String   @db.ObjectId
+  postId String   @db.ObjectId
   issue  String
+  date   DateTime @default(now())
 }
