@@ -1,9 +1,9 @@
 const prisma = require('../../config/prisma')
 
-exports.addReport = async (userId, postId, issue) => {
+exports.addReport = async (userId, postId, issue, description) => {
     try {
         return await prisma.report.create({
-            data: { userId, postId, issue }
+            data: { userId, postId, issue, description }
         })
     } catch (error) {
         throw new Error(error)

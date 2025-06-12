@@ -19,6 +19,7 @@ model User {
   password String
   role     Role
   image    String?
+  isActive Boolean @default(true)
 
   post      Post[]
   savedPost SavedPost[]
@@ -37,6 +38,7 @@ model Post {
   googlemap     String
   image         String
   isSoldout     Boolean @default(false)
+  isActive      Boolean @default(true)
 
   user User @relation(fields: [userId], references: [id])
 
@@ -52,10 +54,17 @@ model SavedPost {
   post Post @relation(fields: [postId], references: [id])
 }
 
+enum Status {
+  pending
+  resolved
+}
+
 model Report {
-  id     String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId String   @db.ObjectId
-  postId String   @db.ObjectId
-  issue  String
-  date   DateTime @default(now())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  postId      String   @db.ObjectId
+  issue       String
+  description String
+  status      Status   @default(pending)
+  date        DateTime @default(now())
 }

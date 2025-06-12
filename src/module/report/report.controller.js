@@ -7,7 +7,7 @@ const { sendError, sendResponse } = require('../../common/response-handler')
 
 exports.addReport = async (req, res) => {
     try {
-        const { postId, issue } = req.body
+        const { postId, issue, description } = req.body
         const userId = req.user.userId
 
         if (!postId || !issue) {
@@ -28,7 +28,7 @@ exports.addReport = async (req, res) => {
             return;
         }
 
-        const newReport = await reportService.addReport(userId, postId, issue)
+        const newReport = await reportService.addReport(userId, postId, issue, description)
         sendResponse(res, 201, "Report added successfully", newReport)
     } catch (error) {
         sendError(res, 500, "Failed to add report", error)
@@ -46,6 +46,7 @@ exports.getAllReports = async (req, res) => {
         const allReportDetails = await Promise.all(
             reports.map(async (item) => {
                 const post = await postService.getPostById(item.postId);
+                const user=await userService.getUserById(item.userId)
                 if (!post) return null;
 
                 // Merge post with report metadata
@@ -53,6 +54,7 @@ exports.getAllReports = async (req, res) => {
                     ...post,
                     reportId: item.id,
                     reporterId: item.userId,
+                    reporterEmail:user.email
                 };
             })
         );
@@ -61,6 +63,8 @@ exports.getAllReports = async (req, res) => {
 
         sendResponse(res, 200, "Reports retrieved successfully", { reports: filteredReports });
     } catch (error) {
+        console.log(error);
+        
         sendError(res, 500, "Failed to retrieve reports", error);
     }
 };

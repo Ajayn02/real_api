@@ -14,6 +14,7 @@ exports.getAllPosts = async (search) => {
     try {
         return await prisma.post.findMany({
             where: {
+                isActive: true,
                 isSoldout: false,
                 location: {
                     contains: search,
@@ -30,11 +31,17 @@ exports.getPostById = async (id, tx) => {
     try {
         if (tx) {
             return await tx.post.findUnique({
-                where: { id }
+                where: {
+                    id,
+                    isActive: true,
+                }
             })
         }
         return await prisma.post.findUnique({
-            where: { id }
+            where: {
+                id,
+                isActive: true,
+            }
         })
     } catch (error) {
         throw new Error("Failed to fetch post")

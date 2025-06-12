@@ -13,7 +13,10 @@ exports.addUser = async ({ name, email, password, role }) => {
 exports.getUserByEmail = async (email) => {
     try {
         return await prisma.user.findUnique({
-            where: { email }
+            where: {
+                email,
+                isActive: true
+            }
         })
     } catch (error) {
         throw new Error('Failed to fetch user')
