@@ -8,7 +8,7 @@ const postRoutes = require('./src/module/post/post.route')
 const userRoutes = require('./src/module/user/user.route')
 const saveRoutes = require('./src/module/save/save.route')
 const reportRoutes = require('./src/module/report/report.route')
-// const adminRoutes = require('./src/module/admin/admin.route')
+const adminRoutes = require('./src/module/admin/admin.route')
 
 const postService = require('./src/module/post/post.service')
 const userService = require('./src/module/user/user.service')
@@ -28,7 +28,7 @@ apiRouter.use('/posts', postRoutes)
 apiRouter.use('/users', userRoutes)
 apiRouter.use('/save', saveRoutes)
 apiRouter.use('/reports', reportRoutes)
-// apiRouter.use('/admin', adminRoutes)
+apiRouter.use('/admin', adminRoutes)
 
 const PORT = 3000 || process.env.PORT
 

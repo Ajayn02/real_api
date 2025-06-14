@@ -10,7 +10,7 @@ exports.addPost = async ({ userId, title, location, price, area, apartmentType, 
     }
 }
 
-exports.getAllPosts = async (search) => {
+exports.getHomePosts = async (search) => {
     try {
         return await prisma.post.findMany({
             where: {

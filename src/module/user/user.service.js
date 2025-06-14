@@ -41,7 +41,11 @@ exports.deleteUser = async (id) => {
 
 exports.getAllUsers = async () => {
     try {
-        return await prisma.user.findMany()
+        return await prisma.user.findMany({
+            where:{
+                isActive:true
+            }
+        })
     } catch (error) {
         throw new Error(error)
     }

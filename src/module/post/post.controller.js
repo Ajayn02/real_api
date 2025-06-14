@@ -22,10 +22,10 @@ exports.addPost = async (req, res) => {
     }
 }
 
-exports.getAllPosts = async (req, res) => {
+exports.getHomePosts = async (req, res) => {
     try {
         const { search } = req.query
-        const allPost = await postService.getAllPosts(search)
+        const allPost = await postService.getHomePosts(search)
         sendResponse(res, 200, "posts retrived successfully", allPost)
     } catch (error) {
         sendError(res, 500, "Posts retriving failed", error)

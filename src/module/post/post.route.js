@@ -8,7 +8,7 @@ router.route('/user')
 
 router.route('/')
     .post(jwtMiddleware, allowRoles('user'), uploadSingle('image'), postController.addPost)
-    .get(jwtMiddleware, allowRoles('user', 'admin'), postController.getAllPosts)
+    .get(jwtMiddleware, allowRoles('user', 'admin'), postController.getHomePosts)
 
 router.route('/:id')
     .get(jwtMiddleware, allowRoles('user', 'admin'), postController.getById)

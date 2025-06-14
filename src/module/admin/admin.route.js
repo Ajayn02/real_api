@@ -1,10 +1,10 @@
-const express=require('express')
-const adminController=require('./admin.controller')
+const express = require('express')
+const adminController = require('./admin.controller')
 const { jwtMiddleware, allowRoles } = require('../../common/middleware')
 
-const router=express.Router()
+const router = express.Router()
 
-router.route("/")
-    .get()
+router.route("/posts")
+    .get(jwtMiddleware, allowRoles('user', 'admin'), adminController.getAllPost)
 
-module.exports=router
+module.exports = router

@@ -46,25 +46,26 @@ exports.getAllReports = async (req, res) => {
         const allReportDetails = await Promise.all(
             reports.map(async (item) => {
                 const post = await postService.getPostById(item.postId);
-                const user=await userService.getUserById(item.userId)
+                const user = await userService.getUserById(item.userId)
                 if (!post) return null;
 
                 // Merge post with report metadata
                 return {
                     ...post,
                     reportId: item.id,
+                    status: item.status,
                     reporterId: item.userId,
-                    reporterEmail:user.email
+                    reporterEmail: user.email
                 };
             })
         );
 
         const filteredReports = allReportDetails.filter(Boolean);
 
-        sendResponse(res, 200, "Reports retrieved successfully", { reports: filteredReports });
+        sendResponse(res, 200, "Reports retrieved successfully", filteredReports);
     } catch (error) {
         console.log(error);
-        
+
         sendError(res, 500, "Failed to retrieve reports", error);
     }
 };
