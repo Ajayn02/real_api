@@ -1,15 +1,13 @@
+const { Role } = require('@prisma/client')
 const prisma = require('../../config/prisma')
 
-exports.updateUser = async ({ image, name }, id) => {
+exports.updateUser = async ({ image, name, isActive }, id) => {
     try {
-
         return await prisma.user.update({
             where: { id },
-            data: { image, name }
+            data: { image, name, isActive }
         })
     } catch (error) {
-        console.log(error);
-
         throw new Error('Failed to update user')
     }
 }
@@ -39,11 +37,25 @@ exports.deleteUser = async (id) => {
     }
 }
 
-exports.getAllUsers = async () => {
+exports.getAllUsers = async (search) => {
     try {
         return await prisma.user.findMany({
-            where:{
-                isActive:true
+            where: {
+                role: Role.user,
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                            mode: 'insensitive'
+                        }
+                    },
+                    {
+                        email: {
+                            contains: search,
+                            mode: 'insensitive'
+                        }
+                    }
+                ]
             }
         })
     } catch (error) {

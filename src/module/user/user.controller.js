@@ -9,21 +9,24 @@ exports.getUniqueUser = async (req, res) => {
         sendError(res, 404, 'user not found')
         return;
     }
-    sendResponse(res, 200, "user data retrived", { name: user.name, email: user.email, id: user.id, image: user.image, role: user.role })
+    sendResponse(res, 200, "user data retrived", { name: user.name, email: user.email, id: user.id, image: user.image, role: user.role, isActive: user.isActive })
 }
 
 exports.updateUser = async (req, res) => {
     try {
-        let { name, image } = req.body
-        const userId = req.user.userId
+        let { name, image, isActive, userId } = req.body
+        const convertedIsActive = isActive === 'true' ? true : false
+
+        if (!userId) {
+            userId = req.user.userId
+        }
 
         if (req.file) {
             image = req.file.filename
         }
+        const updatedUser = await userService.updateUser({ image, name, isActive: convertedIsActive }, userId)
 
-        const updatedUser = await userService.updateUser({ image, name }, userId)
-
-        sendResponse(res, 200, "User details updated successfully", { name: updatedUser.name, image: updatedUser.image })
+        sendResponse(res, 200, "User updated successfully", { name: updatedUser.name, image: updatedUser.image, email: updatedUser.email })
     } catch (error) {
         sendError(res, 500, "Failed to update user ", error)
     }
@@ -48,7 +51,8 @@ exports.deleteUser = async (req, res) => {
 
 exports.getAllUsers = async (req, res) => {
     try {
-        const allUser = await userService.getAllUsers()
+        const { search } = req.query
+        const allUser = await userService.getAllUsers(search)
         if (!allUser) {
             sendError(res, 404, "users not found")
             return;

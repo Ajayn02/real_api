@@ -1,3 +1,4 @@
+const { Status } = require('@prisma/client')
 const prisma = require('../../config/prisma')
 
 exports.addReport = async (userId, postId, issue, description) => {
@@ -33,10 +34,17 @@ exports.getReportById = async (id, tx) => {
     }
 }
 
-exports.deleteReport = async (id) => {
+exports.updateReport = async (id, status, tx) => {
     try {
-        return await prisma.report.delete({
-            where: { id }
+        if (tx) {
+            return await tx.report.update({
+                where: { id },
+                data: { status }
+            })
+        }
+        return await prisma.report.update({
+            where: { id },
+            data: { status }
         })
     } catch (error) {
         throw new Error(error)

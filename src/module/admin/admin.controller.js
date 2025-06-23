@@ -3,7 +3,8 @@ const adminService = require('./admin.service')
 
 exports.getAllPost = async (req, res) => {
     try {
-        const allPosts = await adminService.getAllPost()
+        const { search } = req.query
+        const allPosts = await adminService.getAllPost(search)
         if (!allPosts) {
             sendError(res, 404, 'Posts not found')
             return;
@@ -13,3 +14,4 @@ exports.getAllPost = async (req, res) => {
         sendError(res, 500, 'Failed to retrive posts', error)
     }
 }
+

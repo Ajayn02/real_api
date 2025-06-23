@@ -40,7 +40,7 @@ exports.getPostById = async (id, tx) => {
         return await prisma.post.findUnique({
             where: {
                 id,
-                isActive: true,
+                // isActive: true,
             }
         })
     } catch (error) {
@@ -58,14 +58,20 @@ exports.getPostsByUSerId = async (id) => {
     }
 }
 
-exports.updatePost = async (data, id) => {
+exports.updatePost = async (data, id, tx) => {
     try {
+        if (tx) {
+            return await tx.post.update({
+                where: { id },
+                data: { ...data }
+            })
+        }
         return await prisma.post.update({
             where: { id },
             data: { ...data }
         })
     } catch (error) {
-        throw new Error("Failed to update post")
+        throw new Error(error)
     }
 }
 

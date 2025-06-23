@@ -57,6 +57,7 @@ model SavedPost {
 enum Status {
   pending
   resolved
+  rejected
 }
 
 model Report {

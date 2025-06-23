@@ -38,7 +38,7 @@ exports.signin = async (req, res) => {
             sendError(res, 404, "user not found")
             return;
         }
-        const isMatch = await bcrypt.compare(password, user.password); 2
+        const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) {
             sendError(res, 401, "invalid password")
@@ -46,7 +46,7 @@ exports.signin = async (req, res) => {
         }
 
         const token = jsonwebtoken.sign({ userId: user.id, role: user.role }, process.env.PRIVATE_KEY)
-        sendResponse(res, 200, "Login completed Successfully", { token, username: user.name })
+        sendResponse(res, 200, "Login completed Successfully", { token, username: user.name, role: user.role })
     } catch (error) {
         sendError(res, 500, "user adding failed", error)
     }

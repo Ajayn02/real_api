@@ -3,6 +3,7 @@ const postService = require('../post/post.service')
 const userService = require('../user/user.service')
 const prisma = require('../../config/prisma')
 const { sendError, sendResponse } = require('../../common/response-handler')
+const { Status } = require('@prisma/client')
 
 
 exports.addReport = async (req, res) => {
@@ -55,17 +56,19 @@ exports.getAllReports = async (req, res) => {
                     reportId: item.id,
                     status: item.status,
                     reporterId: item.userId,
-                    reporterEmail: user.email
+                    reporterEmail: user.email,
+                    issue: item.issue,
+                    issueDescription: item.description,
+                    reportDate: item.date
                 };
             })
         );
 
+        // remove null or undefined values
         const filteredReports = allReportDetails.filter(Boolean);
 
         sendResponse(res, 200, "Reports retrieved successfully", filteredReports);
     } catch (error) {
-        console.log(error);
-
         sendError(res, 500, "Failed to retrieve reports", error);
     }
 };
@@ -94,18 +97,32 @@ exports.getById = async (req, res) => {
     }
 }
 
-exports.removeReport = async (req, res) => {
+// reject report
+exports.rejectReport = async (req, res) => {
     try {
         const { id } = req.params
-        const deletedReport = await reportService.deleteReport(id)
-        if (!deletedReport) {
+        const rejectReport = await reportService.updateReport(id, Status.rejected)
+        if (!rejectReport) {
             sendError(res, 404, "Report not found")
             return;
         }
-        sendResponse(res, 200, "Report deleted successfully", deletedReport)
+        sendResponse(res, 200, "Report rejected successfully", rejectReport)
     } catch (error) {
-        console.log(error);
+        sendError(res, 500, "Failed to reject report", error)
+    }
+}
+//take action
 
-        sendError(res, 500, "Failed to delete report", error)
+exports.takeReportAction = async (req, res) => {
+    try {
+        const { id } = req.params
+        const result = await prisma.$transaction(async (tx) => {
+            const updateReport = await reportService.updateReport(id, Status.resolved, tx)
+            const updatedPost = await postService.updatePost({ isActive: false }, updateReport.postId, tx)
+            return { updateReport, updatedPost }
+        })
+        sendResponse(res, 200, 'Post Removed successfully', result.updatedPost)
+    } catch (error) {
+        sendError(res, 500, "Failed to remove post", error)
     }
 }
