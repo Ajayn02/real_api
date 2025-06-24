@@ -28,6 +28,8 @@ exports.getHomePosts = async (req, res) => {
         const allPost = await postService.getHomePosts(search)
         sendResponse(res, 200, "posts retrived successfully", allPost)
     } catch (error) {
+        console.log(error);
+        
         sendError(res, 500, "Posts retriving failed", error)
     }
 

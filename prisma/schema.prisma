@@ -26,8 +26,8 @@ model User {
 }
 
 model Post {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId        String  @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
   title         String
   location      String
   price         Int
@@ -37,8 +37,9 @@ model Post {
   landmark      String
   googlemap     String
   image         String
-  isSoldout     Boolean @default(false)
-  isActive      Boolean @default(true)
+  isSoldout     Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  date          DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
 

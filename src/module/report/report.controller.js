@@ -52,7 +52,8 @@ exports.getAllReports = async (req, res) => {
 
                 // Merge post with report metadata
                 return {
-                    ...post,
+                    id: post.id,
+                    title: post.title,
                     reportId: item.id,
                     status: item.status,
                     reporterId: item.userId,
@@ -111,7 +112,6 @@ exports.rejectReport = async (req, res) => {
         sendError(res, 500, "Failed to reject report", error)
     }
 }
-//take action
 
 exports.takeReportAction = async (req, res) => {
     try {

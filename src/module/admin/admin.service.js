@@ -1,7 +1,6 @@
 const prisma = require('../../config/prisma')
 
-
-exports.getAllPost = async (search) => {
+exports.getAllPost = async (search = '') => {
     try {
         return await prisma.post.findMany({
             where: {
@@ -23,5 +22,19 @@ exports.getAllPost = async (search) => {
         })
     } catch (error) {
         throw new Error("Failed to fetch all posts")
+    }
+}
+
+exports.getPostAnalytics = async () => {
+    try {
+        return await prisma.post.findMany({
+            where: {
+                date: {
+                    gte: new Date(new Date().setMonth(new Date().getMonth() - 5))
+                }
+            }
+        })
+    } catch (error) {
+        throw new Error(error)
     }
 }

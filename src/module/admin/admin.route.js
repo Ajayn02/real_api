@@ -7,4 +7,7 @@ const router = express.Router()
 router.route("/posts")
     .get(jwtMiddleware, allowRoles('user', 'admin'), adminController.getAllPost)
 
+router.route('/post-analytics')
+    .get(jwtMiddleware, allowRoles('user', 'admin'), adminController.getAddPostAnalytics)
+
 module.exports = router
