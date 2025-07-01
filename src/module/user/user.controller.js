@@ -2,9 +2,12 @@ const userService = require('./user.service')
 const { sendResponse, sendError } = require('../../common/response-handler')
 
 exports.getUniqueUser = async (req, res) => {
-    const userId = req.user.userId
-    const user = await userService.getUserById(userId)
+    let { userId } = req.query
 
+    if (!userId) {
+        userId = req.user.userId
+    }
+    const user = await userService.getUserById(userId)
     if (!user) {
         sendError(res, 404, 'user not found')
         return;
@@ -16,7 +19,6 @@ exports.updateUser = async (req, res) => {
     try {
         let { name, image, isActive, userId } = req.body
         const convertedIsActive = isActive === 'true' ? true : false
-
         if (!userId) {
             userId = req.user.userId
         }
@@ -35,14 +37,11 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
     try {
         const { id } = req.params
-
         if (!id) {
             sendError(res, 400, "ID is required")
             return;
         }
-
         const deletedUser = await userService.deleteUser(id)
-
         sendResponse(res, 200, 'user deleted', deletedUser)
     } catch (error) {
         sendError(res, 500, "Failed to delete user ", error)

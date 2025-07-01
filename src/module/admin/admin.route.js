@@ -10,4 +10,7 @@ router.route("/posts")
 router.route('/post-analytics')
     .get(jwtMiddleware, allowRoles('user', 'admin'), adminController.getAddPostAnalytics)
 
+router.route('/user-analytics')
+    .get(jwtMiddleware, allowRoles('user', 'admin'), adminController.getUserAnalytics)
+
 module.exports = router

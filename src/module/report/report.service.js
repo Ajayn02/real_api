@@ -1,4 +1,3 @@
-const { Status } = require('@prisma/client')
 const prisma = require('../../config/prisma')
 
 exports.addReport = async (userId, postId, issue, description) => {

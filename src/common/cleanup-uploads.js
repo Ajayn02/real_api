@@ -19,12 +19,10 @@ const clearUnwantedFiles = (allowedFiles = [], uploadDir = './uploads') => {
                     } else {
                         console.log(`Deleted: ${file}`);
                     }
-                });
+                })
             }
         });
-    });
+    })
 };
 
 module.exports = clearUnwantedFiles
-
-// bug fixx

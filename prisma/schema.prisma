@@ -13,13 +13,14 @@ enum Role {
 }
 
 model User {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
   name     String
-  email    String  @unique
+  email    String   @unique
   password String
   role     Role
   image    String?
-  isActive Boolean @default(true)
+  isActive Boolean  @default(true)
+  date     DateTime @default(now())
 
   post      Post[]
   savedPost SavedPost[]

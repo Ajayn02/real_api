@@ -64,16 +64,13 @@ exports.getAllReports = async (req, res) => {
                 };
             })
         );
-
         // remove null or undefined values
         const filteredReports = allReportDetails.filter(Boolean);
-
         sendResponse(res, 200, "Reports retrieved successfully", filteredReports);
     } catch (error) {
         sendError(res, 500, "Failed to retrieve reports", error);
     }
 };
-
 
 exports.getById = async (req, res) => {
     try {

@@ -38,3 +38,17 @@ exports.getPostAnalytics = async () => {
         throw new Error(error)
     }
 }
+
+exports.getUserAnalytics = async () => {
+    try {
+        return await prisma.user.findMany({
+            where: {
+                date: {
+                    gte: new Date(new Date().setMonth(new Date().getMonth() - 5))
+                }
+            }
+        })
+    } catch (error) {
+        throw new Error(error)
+    }
+}

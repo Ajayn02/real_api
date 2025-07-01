@@ -37,7 +37,7 @@ exports.deleteUser = async (id) => {
     }
 }
 
-exports.getAllUsers = async (search='') => {
+exports.getAllUsers = async (search = '') => {
     try {
         return await prisma.user.findMany({
             where: {

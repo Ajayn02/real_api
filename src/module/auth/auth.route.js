@@ -7,6 +7,6 @@ router.route("/")
     .post(authController.signup)
 
 router.route("/login")
-    .post(authController.signin)    
+    .post(authController.signin)
 
 module.exports = router

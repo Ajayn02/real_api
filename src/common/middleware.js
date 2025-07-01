@@ -1,13 +1,10 @@
-const { sendResponse, sendError } = require('./response-handler')
+const { sendError } = require('./response-handler')
 const jsonwebtoken = require('jsonwebtoken')
 const multer = require('multer')
 const fs = require('fs');
 
-
-
 exports.jwtMiddleware = async (req, res, next) => {
     try {
-
         const token = req.headers.authorization.split(" ")[1]
         if (!token) {
             sendError(res, 400, "token not found")
@@ -20,7 +17,6 @@ exports.jwtMiddleware = async (req, res, next) => {
         sendError(res, 401, "Invalid or expired token", error)
     }
 }
-
 
 exports.allowRoles = (...allowedRoles) => {
     return (req, res, next) => {

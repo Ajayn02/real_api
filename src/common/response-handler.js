@@ -23,4 +23,4 @@ exports.sendError = (res, statusCode, message, error = null
             message,
         });
     }
-};
+}

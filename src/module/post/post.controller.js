@@ -29,7 +29,7 @@ exports.getHomePosts = async (req, res) => {
         sendResponse(res, 200, "posts retrived successfully", allPost)
     } catch (error) {
         console.log(error);
-        
+
         sendError(res, 500, "Posts retriving failed", error)
     }
 
@@ -51,7 +51,11 @@ exports.getById = async (req, res) => {
 
 exports.getByUserId = async (req, res) => {
     try {
-        const userId = req.user.userId
+        let { userId } = req.query
+
+        if (!userId) {
+            userId = req.user.userId
+        }
 
         const posts = await postService.getPostsByUSerId(userId)
         if (!posts) {

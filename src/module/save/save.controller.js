@@ -12,9 +12,9 @@ exports.addToSave = async (req, res) => {
             return;
         }
 
-        const postDetails=await postService.getPostById(postId)
-        if(postDetails.userId===userId){
-            sendError(res,400,"You can't save your post")
+        const postDetails = await postService.getPostById(postId)
+        if (postDetails.userId === userId) {
+            sendError(res, 400, "You can't save your post")
             return;
         }
         const existing = await saveService.getSavedByUserId(userId, postId)
@@ -43,13 +43,13 @@ exports.getByUserId = async (req, res) => {
         const allPosts = await Promise.all(
             savedPosts.map(async (item) => {
                 const post = await postService.getPostById(item.postId)
-                return {...post,savedId:item.id}
+                return { ...post, savedId: item.id }
             })
         )
         sendResponse(res, 200, "Saved items fetched successfully", allPosts)
     } catch (error) {
         console.log(error);
-        
+
         sendError(res, 500, "failed to fetch saved items", error)
     }
 
